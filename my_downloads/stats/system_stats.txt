@@ -1,0 +1,18 @@
+function mystats(){
+	echo;
+	echo "Helmi Yatim";
+	echo;
+	echo "$(whoami), welcome to mystats for $(hostname)";
+	echo "Current date/time is $(date)";
+	echo "=========================================";
+	echo "Uptime report";
+	uptime; 
+	echo "=========================================";
+	echo "Your currently running processes";
+	ps -f;
+	echo "=========================================";
+	echo "Disk Usage Report";
+	df -h;
+	echo "=========================================";
+	echo "Have a great day!";
+}

@@ -1,0 +1,14 @@
+-rw------- 1 jcorkran jcorkran 45750 Feb 15 13:26 .bash_history
+-rw-r--r-- 1 jcorkran jcorkran   220 Jan 15  2019 .bash_logout
+-rw-r--r-- 1 jcorkran jcorkran  3873 Sep  8  2020 .bashrc
+drwx------ 1 jcorkran jcorkran  4096 Jan 15  2019 .config/
+-rw-rw-rw- 1 jcorkran jcorkran    47 Aug  7  2019 .gitconfig
+-rw------- 1 jcorkran jcorkran   389 Feb 10 10:18 .lesshst
+drwxrwxrwx 1 jcorkran jcorkran  4096 Jan 15  2019 .local/
+-rw------- 1 jcorkran jcorkran   208 Dec  8 10:16 .mysql_history
+-rw-r--r-- 1 jcorkran jcorkran   807 Jan 15  2019 .profile
+-rw-rw-r-- 1 jcorkran jcorkran    75 Dec  2  2019 .selected_editor
+drwx------ 1 jcorkran jcorkran  4096 Oct 27 10:48 .ssh/
+-rw-r--r-- 1 jcorkran jcorkran     0 Jan 15  2019 .sudo_as_admin_successful
+-rw------- 1 jcorkran jcorkran 12288 Sep 27  2019 .swp
+drwxrwxr-x 1 jcorkran jcorkran  4096 Jul 15  2021 vimConfig.bak/

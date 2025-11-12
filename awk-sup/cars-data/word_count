@@ -1,0 +1,18 @@
+#!/bin/bash
+if [ $# != 1 ]
+ then
+ echo "Usage: ${0} inputfile"
+ exit 1
+fi
+# Break into words by replacing anything other than alpha values to
+newline
+tr -cs 'a-zA-Z' '\n' < $1 |
+# Convert to lowercase
+tr 'A-Z' 'a-z' |
+# Count the word usage
+awk '
+ {count[$1]++}
+END {
+ for (item in count) printf "%-15s%3s\n",item,count[item]}' |
+# Sort by word usage and then word
+sort -k 2,2nr -k 1,1
