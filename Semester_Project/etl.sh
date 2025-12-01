@@ -53,3 +53,12 @@ sort -t ',' -k 1,1 transaction_no_dollar.csv > transaction.csv
 
 # Sort summary
 sort -t ',' -k 2,2 -k 3,3nr -k 4,4 -k 5,5 summary_unsorted.csv > summary.csv
+
+# Create Transaction report Unsorted
+./transaction_report_unsorted.awk transaction.csv > transaction_report_unsorted.csv
+
+# Sort Transaction Report
+sort -t, -k 2,2nr -k 1,1 transaction_report_unsorted.csv > transaction_report_sorted.csv
+
+# Created Sorted Transaction report
+./transaction_report.awk transaction_report_sorted.csv > transaction.rpt
