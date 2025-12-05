@@ -2,3 +2,5 @@ private key = ~/.ssh/id_rsa
 remote server = 167.99.48.123 
 remote userid = hyatim1
 remote file =  /home/shared/MOCK_MIX_v2.1.csv.bz2 
+
+./etl.sh ~/.ssh/id_rsa 167.99.48.123 hyatim1 /home/shared/MOCK_MIX_v2.1.csv.bz2 

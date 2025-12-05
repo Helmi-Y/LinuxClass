@@ -15,6 +15,6 @@ BEGIN { FS = OFS = ","}
 
 END{
     for (c in total) {
-        printf "%s, %s, %s, %s, %s, %.2f\n", c, state[c], zip[c], lname[c], fname[c], total[c]
+        printf "%s,%s,%s,%s,%s,%.2f\n", c, state[c], zip[c], lname[c], fname[c], total[c]
     }
 }
