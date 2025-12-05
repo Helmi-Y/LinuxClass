@@ -6,7 +6,7 @@
 for csv in *.csv; do
     if [[ "$csv" != "transaction.csv" &&
           "$csv" != "summary.csv" &&
-          "$csv" != "exception.csv" ]]; then
+          "$csv" != "exceptions.csv" ]]; then
         rm "$csv"
         echo "Removed temp CSV: $csv"
     fi

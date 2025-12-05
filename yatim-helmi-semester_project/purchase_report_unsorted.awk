@@ -8,6 +8,8 @@ BEGIN {
 }
 
 {
+    #Calculate total purchase by gender and state
+    
     state = toupper($12)
     gender = toupper($5)
     purchase = $6
@@ -18,6 +20,9 @@ BEGIN {
 END{
     for (a in total)
     {
+        #Split total array into two parts
+        #Print as required format
+
         split(a, part, SUBSEP)
         state = part[1]
         gender = part[2]

@@ -6,6 +6,7 @@ BEGIN { FS = OFS = ","}
 
 {
     gender = $5
+    # Convert gender to standardized format
     if (gender == 1 || tolower(gender) == "female")
         $5 = "f"
     else if (gender == 0 || tolower(gender) == "male")

@@ -38,6 +38,10 @@ echo "Remote file '$remote_file' transfered successfully."
 # The source file will be referred to as the transaction file 
 # from this point forward and should be named so in your code.
 filename=${remote_file##*/}
+if [ ! -f "$filename" ]; then
+        echo "Error: Transfered File '$filename' not found in local directory" 1>&2
+        exit 1
+fi
 cp "$filename" ./transaction_file.csv.bz2
 echo "Step 2: Original file preserved as transaction_file.csv.bz2"
 
@@ -62,28 +66,44 @@ if [ ! -f normalize_gender.awk ]; then
         echo "Error: normalize_gender.awk is missing" 1>&2
         exit 1
 fi
-./normalize_gender.awk transaction_lower.csv > transaction_gender.csv
 echo "Step 6: Normalize gender"
+./normalize_gender.awk transaction_lower.csv > transaction_gender.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Filter states
 if [ ! -f filter_states.awk ]; then
         echo "Error: filter_states.awk is missing" 1>&2
         exit 1
 fi
-./filter_states.awk transaction_gender.csv > transaction_states.csv
 echo "Step 7: State filter applied"
+./filter_states.awk transaction_gender.csv > transaction_states.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Remove the "$" sign from the purchase amt field.
 if [ ! -f remove_dollar.awk ]; then
         echo "Error: remove_dollar.awk is missing." 1>&2
         exit 1
 fi
-./remove_dollar.awk transaction_states.csv > transaction_no_dollar.csv
 echo "Step 8: Dollar signes removed from purchase amount"
+./remove_dollar.awk transaction_states.csv > transaction_no_dollar.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Sort transaction file by customerID
-sort -t ',' -k 1,1 transaction_no_dollar.csv > transaction.csv
 echo "Step 9: Transaction file sorted by customer id"
+sort -t ',' -k 1,1 transaction_no_dollar.csv > transaction.csv
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to sort transaction file." 1>&2
+    exit 1
+fi
 
 # Summarize total purchase per customer
 if [ ! -f summary.awk ]; then
@@ -91,6 +111,10 @@ if [ ! -f summary.awk ]; then
         exit 1
 fi
 ./summary.awk transaction.csv > summary_unsorted.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Sort summary
 sort -t ',' -k 2,2 -k 3,3nr -k 4,4 -k 5,5 summary_unsorted.csv > summary.csv
@@ -101,28 +125,44 @@ if [ ! -f transaction_report_unsorted.awk ] || [ ! -f transaction_report.awk ]; 
         echo "Error: transaction report AWK scripts missing." 1>&2
         exit 1
 fi
+echo "Step 11: Transaction report created."
 ./transaction_report_unsorted.awk transaction.csv > transaction_report_unsorted.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Sort Transaction Report
 sort -t, -k 2,2nr -k 1,1 transaction_report_unsorted.csv > transaction_report_sorted.csv
 
 # Created Sorted Transaction report
 ./transaction_report.awk transaction_report_sorted.csv > transaction.rpt
-echo "Step 11: Transaction report created."
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Create Purchase Report unsorted
 if [ ! -f purchase_report_unsorted.awk ] || [ ! -f purchase_report.awk ]; then
         echo "Error: Purchase report AWK scripts missing." 1>&2
         exit 1
 fi
+echo "Step 12: Purchase report created."
 ./purchase_report_unsorted.awk transaction.csv > purchase_report_unsorted.csv
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Sort Purchase Report
 sort -t, -k 3,3nr -k 1,1 -k 2,2  purchase_report_unsorted.csv > purchase_report_sorted.csv
 
 # Create Sorted Purchase Report
 ./purchase_report.awk purchase_report_sorted.csv > purchase.rpt
-echo "Step 12: Purchase report created."
+if [ $? -ne 0 ]; then
+        echo "Error: Failed to run this step." 1>&2
+        exit 1
+fi
 
 # Prompt for MySQL password
 read -sp "Enter MySQL password: " MYSQL_PASS
@@ -142,7 +182,16 @@ echo "Step 13: Database tables created."
 
 #Import CSVs
 mysqlimport --local --user="$MYSQL_USER" --password="$MYSQL_PASS" --fields-terminated-by=',' "$MYSQL_DB" transaction.csv
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to import transaction.csv into MySQL." 1>&2
+    exit 1
+fi
 mysqlimport --local --user="$MYSQL_USER" --password="$MYSQL_PASS" --fields-terminated-by=',' "$MYSQL_DB" summary.csv
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to import summary.csv into MySQL." 1>&2
+    exit 1
+fi
+
 echo "Step 14: CSV files loaded into MySQL database."
 
 #Clean up
@@ -154,7 +203,7 @@ echo " --------- "
 
 echo "CSV files saved:"
 echo " - transaction.csv" 
-echo " - exception.csv" 
+echo " - exceptions.csv" 
 echo " - summary.csv"
 echo " --------- "
 

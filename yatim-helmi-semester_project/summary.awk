@@ -5,6 +5,7 @@
 BEGIN { FS = OFS = ","}
 
 {
+    # Map columns based on customer
     cust = $1
     state[cust] = $12
     zip[cust] = $13

@@ -6,6 +6,7 @@ BEGIN { FS = OFS = ","}
 
 {
     state = $12
+    # If blank or NA, put in exceptions.csv, otherwise print
     if (state == "" || toupper(state) == "NA")
         print > "exceptions.csv"
     else
